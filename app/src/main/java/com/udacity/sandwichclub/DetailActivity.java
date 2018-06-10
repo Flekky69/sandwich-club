@@ -15,6 +15,7 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
+    public static final String NA = "n/a";
 
     private Sandwich sandwich;
     private TextView alsoKnownTv;
@@ -56,9 +57,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         populateUI();
-        Picasso.with(this)
-                .load(sandwich.getImage()).error(R.drawable.imnotfound)
-                .into(ingredientsIv);
+        Picasso.with(this).load(sandwich.getImage()).error(R.drawable.imnotfound).into(ingredientsIv);
 
         setTitle(sandwich.getMainName());
     }
@@ -69,15 +68,20 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI() {
-        for (int i = 0; i < sandwich.getAlsoKnownAs().size(); i++) {
-            if (i > 0) alsoKnownTv.append(", ");
-            alsoKnownTv.append(sandwich.getAlsoKnownAs().get(i));
-
+        if (sandwich.getAlsoKnownAs().size() == 0) {
+            alsoKnownTv.setText(NA);
+        } else {
+            for (int i = 0; i < sandwich.getAlsoKnownAs().size(); i++) {
+                if (i > 0) alsoKnownTv.append(", ");
+                alsoKnownTv.append(sandwich.getAlsoKnownAs().get(i));
+            }
         }
         for (int i = 0; i < sandwich.getIngredients().size(); i++) {
             ingredientsTv.append(sandwich.getIngredients().get(i) + "\n");
         }
-        originTv.setText(sandwich.getPlaceOfOrigin() + "\n");
+        if (sandwich.getPlaceOfOrigin().isEmpty() || sandwich.getPlaceOfOrigin().equals(""))
+            originTv.setText(NA + "\n");
+        else originTv.setText(sandwich.getPlaceOfOrigin() + "\n");
         descriptionTv.setText(sandwich.getDescription());
 
 
